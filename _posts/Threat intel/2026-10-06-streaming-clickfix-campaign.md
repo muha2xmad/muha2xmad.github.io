@@ -451,7 +451,7 @@ Obfuscated CMD → Character-index reconstruction → String replacement → Sec
 
 IOCs
 
-The lists of IOCs (Domains, IPs, and body of pages) are in my github.
+The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://github.com/muha2xmad/IOCs/tree/main/arabic%20streaming%20clickfix%20campaign).
 
 | IOC (Domain or SHA256 Hash)                                        | Category                                                                                                                        |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
