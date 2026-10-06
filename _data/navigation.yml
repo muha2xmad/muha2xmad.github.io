@@ -6,4 +6,6 @@ main:
     url: /categories/#Malware-analysis
   - title: "Mal Documents"
     url: /categories/#Mal-Document
+  - title: "Threat Intelligence"
+    url: /categories/#Threat-Intelligence
   # url: https://google.com
