@@ -72,10 +72,10 @@ The **Cyber Kill Chain** model is used to map the observed ClickFix campaign whi
 | **Reconnaissance**           | targeting of users visiting popular Arabic streaming and including `MyCima`, `WeCima`, `EgyBest`, and `Shahid4u`.                                                         |
 | **Weaponization**            | Preparation of  verification pages and obfuscated commands designed to initiate command execution.                                                                        |
 | **Delivery**                 | Malicious pages are presented to visitors through streaming-related domains and associated infrastructure include `cloudflare.vc`, `get-entry.to`, `galacticflowtech.lol` |
-| **Exploitation**             | Victims are socially engineered into copying and executing commands, believing they are completing a verification process.                                                |
-| **Installation**             | The executed command may download, stage, or launch a malicious payload on the victim's endpoint.                                                                         |
+| **Exploitation**             | Victims copying and executing commands, believing they are completing a verification process.                                                                             |
+| **Installation**             | The executed command launches a malicious payload on the victim's endpoint.                                                                                               |
 | **Command and Control (C2)** | payload communicate with attacker infrastructure to receive instructions.                                                                                                 |
-| **Actions on Objectives**    | Credential theft, information collection, or further compromise of the victim's system.                                                                                   |
+| **Actions on Objectives**    | Credential theft, information collection, and further compromise of the victim's system.                                                                                  |
 
 
 ## **User Fingerprinting**
