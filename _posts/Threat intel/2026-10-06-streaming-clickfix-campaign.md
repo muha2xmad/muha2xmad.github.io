@@ -490,7 +490,54 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h cd $env:TMP;
 Obfuscated CMD → Character-index reconstruction → String replacement → Second-stage command  → MSI download → C2 communication
 
 
-IOCs
+
+# MITRE ATT&CK
+
+| Tactic               | Tactic ID | Technique                               | Technique ID |
+| -------------------- | --------- | --------------------------------------- | ------------ |
+| Execution            | TA0002    | Windows Management Instrumentation      | T1047        |
+| Execution            | TA0002    | Command and Scripting Interpreter       | T1059        |
+| Execution            | TA0002    | Scripting                               | T1064        |
+| Execution            | TA0002    | Native API                              | T1106        |
+| Execution            | TA0002    | Shared Modules                          | T1129        |
+| Execution            | TA0002    | Hijack Execution Flow                   | T1574        |
+| Persistence          | TA0003    | Modify Registry                         | T1112        |
+| Persistence          | TA0003    | Create or Modify System Process         | T1543        |
+| Persistence          | TA0003    | Boot or Logon Autostart Execution       | T1547        |
+| Privilege Escalation | TA0004    | Process Injection                       | T1055        |
+| Privilege Escalation | TA0004    | Create or Modify System Process         | T1543        |
+| Privilege Escalation | TA0004    | Boot or Logon Autostart Execution       | T1547        |
+| Stealth              | TA0005    | Obfuscated Files or Information         | T1027        |
+| Stealth              | TA0005    | Masquerading                            | T1036        |
+| Stealth              | TA0005    | Process Injection                       | T1055        |
+| Stealth              | TA0005    | Scripting                               | T1064        |
+| Stealth              | TA0005    | Indicator Removal                       | T1070        |
+| Stealth              | TA0005    | Deobfuscate/Decode Files or Information | T1140        |
+| Stealth              | TA0005    | Indirect Command Execution              | T1202        |
+| Stealth              | TA0005    | Virtualization/Sandbox Evasion          | T1497        |
+| Stealth              | TA0005    | Impair Defenses                         | T1562        |
+| Stealth              | TA0005    | Hide Artifacts                          | T1564        |
+| Stealth              | TA0005    | Hijack Execution Flow                   | T1574        |
+| Credential Access    | TA0006    | OS Credential Dumping                   | T1003        |
+| Credential Access    | TA0006    | Steal Web Session Cookie                | T1539        |
+| Discovery            | TA0007    | Query Registry                          | T1012        |
+| Discovery            | TA0007    | System Owner/User Discovery             | T1033        |
+| Discovery            | TA0007    | Process Discovery                       | T1057        |
+| Discovery            | TA0007    | Permission Groups Discovery             | T1069        |
+| Discovery            | TA0007    | System Information Discovery            | T1082        |
+| Discovery            | TA0007    | File and Directory Discovery            | T1083        |
+| Discovery            | TA0007    | Virtualization/Sandbox Evasion          | T1497        |
+| Discovery            | TA0007    | Software Discovery                      | T1518        |
+| Collection           | TA0009    | Data Staged                             | T1074        |
+| Command and Control  | TA0011    | Application Layer Protocol              | T1071        |
+| Command and Control  | TA0011    | Ingress Tool Transfer                   | T1105        |
+| Command and Control  | TA0011    | Dynamic Resolution                      | T1568        |
+| Command and Control  | TA0011    | Encrypted Channel                       | T1573        |
+| Impact               | TA0040    | Data Destruction                        | T1485        |
+| Defense Impairment   | TA0112    | Modify Registry                         | T1112        |
+
+
+# IOCs
 
 The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://github.com/muha2xmad/IOCs/tree/main/arabic%20streaming%20clickfix%20campaign).
 
