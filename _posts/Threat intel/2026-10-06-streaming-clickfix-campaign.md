@@ -34,10 +34,18 @@ ClickFix attack flow:
 </p>
 <br>
 
+The report is important because streaming platforms such as `MyCima`, `WeCima`, `EgyBest`, `Shahid4u`, and `Cima4U`  which attract regional users and may expose them to malicious redirects and malware delivery. 
+These techniques can lead to endpoint compromise, credential theft, and other security risks.
+
+Organizations should use these findings to strengthen security awareness by educating employees about ClickFix techniques, warning against copying and executing commands from websites. 
+Security teams should monitor similar indicators and use the campaign's tactics through targeted awareness campaigns.
+
 ---
 
-# **Arabic streaming websites campaign**
-The threat actor targets well-known Arabic streaming platforms by deploying systematic variations of their domains. This includes alternative TLDs (e.g. .cam, .party, .fast, .life, .land, .shop, .help, .ltd, .promo, .archi, .host) and misspelling domains writing to exploit common user typing errors.
+# **Technical Analysis**
+## Technical Analysis Summary
+
+The threat actor targets well-known Arabic streaming platforms by deploying systematic variations of their domains. This includes alternative TLDs (e.g. .party, .fast, .life, .land, .shop, .help) and misspelling domains writing to exploit common user typing errors.
 
 The attack begins with domain impersonation, where attackers register domains that closely looks alike legitimate streaming platforms.
 Once the user lands on the fake website, the threat actors profile or fingerprint the user. Then the user is redirected to the ClickFix page.
@@ -51,10 +59,24 @@ In this example, the threat actor registered wecimaa[.]cyou, a typosquatted vers
 4. **Social Engineering**: The ClickFix page displays a message prompting users to press "Allow" so that a command can be copied to their clipboard
 5. **Execution**: User pastes and runs this command, which typically downloads payload
 
+
 <p align="center">
   <img src="/assets/images/TI/arabic/Recording2026-10-01013826.gif" />
 </p>
 <br>
+
+The **Cyber Kill Chain** model is used to map the observed ClickFix campaign which abuses Arabic streaming websites to expose visitors to manually executing commands. The following mapping is based on the identified ClickFix domains, infrastructure pivots, and analysis of the obfuscated command.
+
+| Cyber Kill Chain Stage       | ClickFix Campaign Activity                                                                                                                                                | Evidence / Assessment                                                                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Reconnaissance**           | targeting of users visiting popular Arabic streaming and including `MyCima`, `WeCima`, `EgyBest`, and `Shahid4u`.                                                         | The campaign's streaming-related context is observed. The attacker's reconnaissance process and victim-selection methods are not confirmed.                       |
+| **Weaponization**            | Preparation of  verification pages and obfuscated commands designed to initiate command execution.                                                                        | ClickFix page analysis and a recovered obfuscated command support this assessment. The complete payload chain requires further analysis.                          |
+| **Delivery**                 | Malicious pages are presented to visitors through streaming-related domains and associated infrastructure include `cloudflare.vc`, `get-entry.to`, `galacticflowtech.lol` | Identified domains include `get-verification.to`, `get-entry.to`, `galacticflowtech.lol`, `galaxyflowsystems.lol`, and `pulsarflowtech.lol`.                      |
+| **Exploitation**             | Victims are socially engineered into copying and executing commands, believing they are completing a verification process.                                                | The reconstructed command demonstrates the command-building technique. This is primarily social engineering rather than exploitation of a software vulnerability. |
+| **Installation**             | The executed command may download, stage, or launch a malicious payload on the victim's endpoint.                                                                         | A potential stage in the execution chain; successful payload download, persistence, or installation must be verified through payload or endpoint evidence.        |
+| **Command and Control (C2)** | payload communicate with attacker infrastructure to receive instructions.                                                                                                 | Not confirmed by domain and IP associations alone. Requires network telemetry, payload configuration, or observed C2 communications.                              |
+| **Actions on Objectives**    | Credential theft, information collection, or further compromise of the victim's system.                                                                                   | Potential impact only. Malware analysis or endpoint evidence is required to establish the actual objective and whether it was achieved.                           |
+
 
 ## **User Fingerprinting**
 
@@ -64,13 +86,15 @@ Instead of treating every visitor equally, the attacker uses this data to decide
 **Example:**
 
 Initial Redirect
+
 **URL:** `https://cf.quickbase.icu/middle.html?impId=...&ct=...`
-impId = Unique tracking ID
-ct = Encrypted session token from campaign
+- `impId` = Unique tracking ID
+- `ct` = Encrypted session token from campaign
 
 **Fingerprinting API Call**
 
 **URL:** `https://cf.quickbase.icu/api/v1/px2?ct=...&minfo=...`
+
 This is where the actual browser profiling happens. The JavaScript on `middle.html` collects telemetry and sends it via this API endpoint.
 - **`ct`:** Same Click Token as above, helps to correlate the fingerprint data with the initial impression.
 - **`minfo`:** A **Base64-encoded JSON object** containing detailed browser and system fingerprints. 
@@ -116,7 +140,6 @@ After profiling confirms the user is a valid target, they are redirected to the 
 **URL:** `https://cmcln4.cinemadataflow.cfd/*`
 
 **Fingerprinting overview:**
-
 1. **Victim visits** `wecimaa.cyou` → redirected to `cf.quickbase.icu/middle.html`
 2. **JavaScript profiles** the browser extensively via `/api/v1/px2`, sending encoded telemetry
 3. **Server evaluates** fingerprint: checks for bots, sandboxes, timezone mismatches, and valid sessions
@@ -189,7 +212,9 @@ The IP addresses resolve to a mix of legitimate CDN proxies and VPS hosting prov
 
 The searches were performed against the identified IPs, with `Redirecting` and `Loading` used as page-body indicators. These two words were contained inside the body of phishing websites before redirecting to the ClickFix page.
 
-The selected IPs were prioritized because they belong to direct cloud-hosting infrastructure (AS63949 - Akamai Connected Cloud/Linode). And the majority of the remaining IPs are Cloudflare anycast addresses. Direct hosting IPs provide a more actionable pivot point for identifying co-hosted domains, historical DNS relationships, TLS certificates, server fingerprints, and related infrastructure.
+The selected IPs were prioritized because they belong to direct cloud-hosting infrastructure (AS63949 - Akamai Connected Cloud/Linode). And the majority of the remaining IPs are Cloudflare anycast addresses. 
+
+Direct hosting IPs provide a more actionable pivot point for identifying hosted domains, historical DNS relationships, TLS certificates, server fingerprints, and related infrastructure.
 
 | Shared IP       | Domain Name |
 | --------------- | ----------- |
@@ -200,9 +225,10 @@ The selected IPs were prioritized because they belong to direct cloud-hosting in
 | 172.239.193.198 | linode.com  |
 | 45.33.83.100    | linode.com  |
 
-All six IPs belong to **Linode/Akamai cloud** ranges (45.33.83.100 and 172.232.x / 172.236.x / 172.239.x). The same VPS hosts serve **both** parked-domain monetization pages **and** live phishing kit infrastructure,  strong evidence of a single operator (or closely linked group) using cheap cloud VPS for the full pipeline.
+All six IPs belong to **Linode/Akamai cloud** ranges. The same VPS hosts serve live phishing kit infrastructure.
 
 **Most of the content is parked**
+
 The bulk of the captures (172.239.193.153, 172.232.6.55, 172.236.114.191, much of 172.239.34.170) are **ParkLogic parking pages** under three distinct tenants (`oliver`, `joe2`, `andrii`) plus a custom parking feed. Two things stand out even here:
 - **Anti-bot evasion built in**: the "protected-link" JavaScript only activates redirect links on mouse/touch/scroll — designed so sandboxes and crawlers see nothing clickable.
 - **The parked inventory is weaponizable**: hundreds of typosquats and brand-adjacent names are parked and ready to be flipped to live phishing at any time.
@@ -247,6 +273,7 @@ These domains use typosquatting and brand mimicry to target banking customers fo
 | `06lends.pics`                      | Generic Lending                      |
 | `cashfloweasefinance.com`           | Generic Finance                      |
 
+
 **Tech, SaaS & Security Impersonation**
 
 These domains mimic software vendors to trick users into downloading malware or granting remote access.
@@ -273,7 +300,9 @@ These domains mimic software vendors to trick users into downloading malware or 
 | `techblazing.com`     | Abused Legitimate Site         |
 | `indexs.cloud`        | Parklogic Infrastructure       |
 
+
 **Streaming, Retail & Logistics Impersonation**
+
 These domains target consumers with fake billing, delivery, or account suspension warnings.
 
 | Domain                         | Impersonated Brand / Theme   |
@@ -333,7 +362,7 @@ Four domains sit behind Cloudflare:
 </p>
 <br>
 
-The list contains **134 indicators** of compromised and malicious hosts redirecting to a ClickFix page: `https://cloudflare.vc/`.
+The list named `redir to cloudflare_vc domains.csv` in IOCs contains **134 indicators** of compromised and malicious hosts redirecting to a ClickFix page: `https://cloudflare.vc/`.
 
 
 **IP Address: `94.103.1.233`**
@@ -349,8 +378,6 @@ his IP belongs to the `94.103.1.0/24` subnet, where multiple malicious domains h
 | **Registration Country** | Russian Federation                                 |
 | Domain Name              | dhost.su                                           |
 
-**Virustotal Observed Related Domains**
-
 The following malicious domains have been observed active on the IP:
 
 | Domain                |
@@ -358,7 +385,7 @@ The following malicious domains have been observed active on the IP:
 | `cloudflare.vc`       |
 | `get-verification.to` |
 
-**Observed Related Domains**: These domains were found in the body of `cloudflare.vc` which can be used as pivot point.
+These domains were found in the body of `cloudflare.vc` which can be used as pivot point.
 
 | Type               | Indicator                 | Context                          |
 | ------------------ | ------------------------- | -------------------------------- |
