@@ -543,6 +543,7 @@ Obfuscated CMD → Character-index reconstruction → String replacement → Sec
 The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://github.com/muha2xmad/IOCs/tree/main/arabic%20streaming%20clickfix%20campaign).
 
 
+
 | IOC (Domain or SHA256 Hash)                                        | Category                                                                                                                        |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | `galacticflowtech.lol`                                             | ClickFix Page                                                                                                                   |
@@ -560,6 +561,14 @@ The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://g
 | `cartoonspiritart.cfd`                                             | Fingerprinting Domain                                                                                                           |
 | `realmteam.site`                                                   | Fingerprinting Domain                                                                                                           |
 | `nano329.pro`                                                      | Fingerprinting Domain                                                                                                           |
+| `verico-de-id.beer`                                                | Fingerprinting Domain                                                                                                           |
+| `fingerprint-verification.info`                                    | Fingerprinting Domain                                                                                                           |
+| `securityalertcaptchacheck.com`                                    | Fingerprinting Domain                                                                                                           |
+| `interseqf.com`                                                    | Fingerprinting Domain                                                                                                           |
+| `interseq.at`                                                      | Fingerprinting Domain                                                                                                           |
+| `geratefault.com`                                                  | Fingerprinting Domain                                                                                                           |
+| `renotad.com`                                                      | Fingerprinting Domain                                                                                                           |
+| `latoem.biz`                                                       | Fingerprinting Domain                                                                                                           |
 | `nebuladatastream.lol`                                             | First-Stage Payload Domain                                                                                                      |
 | `imagedrah.com`                                                    | First-Stage Payload Domain                                                                                                      |
 | `novatrafficcore.lol`                                              | First-Stage Payload Domain                                                                                                      |
@@ -576,6 +585,7 @@ The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://g
 | `fb3b51251459108f3337d7ae3e5fad105d35a8956ae05d333b8f128afc451a31` | Extracted [Executable](https://app.any.run/tasks/43a11b7e-d8b9-49b4-8408-02643568f94c/) (`3e1LfPE3k6BR4EZ-ptYKZRR30rMPonL.exe`) |
 | `268ae71bdcefaaa418cb42efcf0f6a3b828e233eca3cb55faa666058d9e6651b` | Dropped Executable (`update-KB4703886.exe`)                                                                                     |
 | `de958b6195ea807ae674b522a907be91331c4d12e564e3a8e8d86d8db64d33cd` | MSI (`u.msi`)                                                                                                                   |
+
 
 
 # Recommendations
