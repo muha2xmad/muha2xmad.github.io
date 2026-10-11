@@ -348,7 +348,10 @@ Four domains sit behind Cloudflare:
 **Pivot Domain: `cloudflare.vc`**
 
 `cloudflare.vc` is a malicious domain abused in ClickFix attacks which impersonates Cloudflare's human verification page to trick victims into executing malicious commands.
-
+<p align="center">
+  <img src="/assets/images/TI/arabic/cloudflare-ezgif.com-censor.gif" />
+</p>
+<br>
 **Behavior:**
 - No fingerprinting of users when visiting the compromised or malicious website.
 - Redirect to the `cloudflare.vc` ClickFix page.
@@ -546,6 +549,7 @@ The lists of IOCs (Domains, IPs, and body of pages) are in my [github](https://g
 | `galaxyflowsystems.lol`                                            | ClickFix Page                                                                                                                   |
 | `pulsarflowtech.lol`                                               | ClickFix Page                                                                                                                   |
 | `cloudflare.vc`                                                    | ClickFix Page                                                                                                                   |
+| `cloudflare.bz`                                                    | ClickFix Page                                                                                                                   |
 | `cinemadataflow.cfd`                                               | ClickFix Page                                                                                                                   |
 | `discoverpopfilenow.monster`                                       | Fingerprinting Domain                                                                                                           |
 | `kawaiidragonquest.cfd`                                            | Fingerprinting Domain                                                                                                           |
