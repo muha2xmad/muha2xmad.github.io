@@ -618,7 +618,11 @@ In business environments
 - Awareness campaign for the users
 
 
+# Quote
 
+> Anyone can hold the helm when the sea is calm.
+
+**تم بحمد الله وبتوفيقه**
 
 
 # References
